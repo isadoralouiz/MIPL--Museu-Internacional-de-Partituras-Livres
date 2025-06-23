@@ -1,0 +1,23 @@
+{
+    "batchcomplete": "",
+    "continue": {
+      "cmcontinue": "page|123456",
+      "continue": "-||"
+    },
+    "query": {
+      "categorymembers": [
+        {"pageid": 1, "ns": 14, "title": "Category:Frédéric Chopin"},
+        {"pageid": 2, "ns": 14, "title": "Category:Ludwig van Beethoven"},
+        {"pageid": 3, "ns": 14, "title": "Category:Pyotr Ilyich Tchaikovsky"},
+        {"pageid": 4, "ns": 14, "title": "Category:Robert Schumann"},
+        {"pageid": 5, "ns": 14, "title": "Category:Franz Schubert"},
+        {"pageid": 6, "ns": 14, "title": "Category:Johann Sebastian Bach"},
+        {"pageid": 7, "ns": 14, "title": "Category:Felix Mendelssohn"},
+        {"pageid": 8, "ns": 14, "title": "Category:Clara Schumann"},
+        {"pageid": 9, "ns": 14, "title": "Category:Ernesto Nazareth"},
+        {"pageid": 10, "ns": 14, "title": "Category:Zequinha de Abreu"},
+        {"pageid": 11, "ns": 14, "title": "Category:Chiquinha Gonzaga"}
+      ]
+    }
+  }
+  
