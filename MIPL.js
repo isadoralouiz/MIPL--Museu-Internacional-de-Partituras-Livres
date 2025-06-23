@@ -54,12 +54,14 @@ async function mostrarPartiturasNaPagina() {
 
     const partituras = await buscarPartiturasDoCompositor(compositor);
 
-    partituras.forEach(partitura => {
-      const p = document.createElement('p');
-      p.classList.add('partitura');
-      p.textContent = partitura.title;
-      divCompositor.appendChild(p);
-    });
+    partituras
+      .filter(partitura => !partitura.title.startsWith("Category:"))
+      .forEach(partitura => {
+        const p = document.createElement('p');
+        p.classList.add('partitura');
+        p.textContent = partitura.title;
+        divCompositor.appendChild(p);
+      });
 
     container.appendChild(divCompositor);
   }
