@@ -1,70 +1,50 @@
-const proxyCORS = 'https://api.allorigins.win/raw?url=';
-
 const compositores = [
-  "Frédéric Chopin",
-  "Ludwig van Beethoven",
-  "Pyotr Ilyich Tchaikovsky",
-  "Robert Schumann",
-  "Franz Schubert",
-  "Johann Sebastian Bach",
-  "Felix Mendelssohn",
-  "Clara Schumann",
-  "Ernesto Nazareth",
-  "Zequinha de Abreu",
-  "Chiquinha Gonzaga"
+  { nome: "Frédéric Chopin", id: "chopin" },
+  { nome: "Ludwig van Beethoven", id: "beethoven" },
+  { nome: "Clara Schumann", id: "clara-schumann" },
+  { nome: "Robert Schumann", id: "robert-schumann" },
+  { nome: "Johann Sebastian Bach", id: "bach" },
+  { nome: "Franz Schubert", id: "schubert" },
+  { nome: "Felix Mendelssohn", id: "mendelssohn" },
+  { nome: "Pyotr Ilyich Tchaikovsky", id: "tchaikovsky" }
 ];
 
-async function buscarPartiturasDoCompositor(nomeCompositor) {
-  let listaPartituras = [];
-  let tokenContinuidade = null;
+async function buscarObras(compositorID) {
+  const url = `https://api.openopus.org/work/list/composer/${compositorID}/romantic.json`;
 
-  do {
-    let urlAPI = `https://imslp.org/w/api.php?action=query&format=json&list=categorymembers&cmtitle=Category:${encodeURIComponent(nomeCompositor)}&cmlimit=50&origin=*`;
-    if (tokenContinuidade) urlAPI += `&cmcontinue=${tokenContinuidade}`;
+  const resposta = await fetch(url);
+  const dados = await resposta.json();
 
-    const resposta = await fetch(proxyCORS + encodeURIComponent(urlAPI));
-    const texto = await resposta.text();
+  if (dados.status.success !== "true") {
+    console.error(`Erro ao buscar obras de ${compositorID}`);
+    return [];
+  }
 
-    let dados;
-    try {
-      dados = JSON.parse(texto);
-    } catch (e) {
-      console.error(`Erro ao parsear JSON para ${nomeCompositor}:`, e);
-      break;
-    }
-
-    listaPartituras = listaPartituras.concat(dados.query.categorymembers);
-    tokenContinuidade = dados.continue ? dados.continue.cmcontinue : null;
-
-  } while (tokenContinuidade);
-
-  return listaPartituras;
+  return dados.works;
 }
 
-async function mostrarPartiturasNaPagina() {
-  const container = document.getElementById('conteudo');
+async function mostrarObrasNaPagina() {
+  const container = document.getElementById("conteudo");
 
   for (const compositor of compositores) {
-    const divCompositor = document.createElement('div');
-    divCompositor.classList.add('compositor');
+    const div = document.createElement("div");
+    div.classList.add("compositor");
 
-    const h2 = document.createElement('h2');
-    h2.textContent = compositor;
-    divCompositor.appendChild(h2);
+    const h2 = document.createElement("h2");
+    h2.textContent = compositor.nome;
+    div.appendChild(h2);
 
-    const partituras = await buscarPartiturasDoCompositor(compositor);
+    const obras = await buscarObras(compositor.id);
 
-    partituras
-      .filter(partitura => !partitura.title.startsWith("Category:"))
-      .forEach(partitura => {
-        const p = document.createElement('p');
-        p.classList.add('partitura');
-        p.textContent = partitura.title;
-        divCompositor.appendChild(p);
-      });
+    obras.forEach((obra) => {
+      const p = document.createElement("p");
+      p.classList.add("obra");
+      p.textContent = obra.title;
+      div.appendChild(p);
+    });
 
-    container.appendChild(divCompositor);
+    container.appendChild(div);
   }
 }
 
-mostrarPartiturasNaPagina().catch(console.error);
+mostrarObrasNaPagina().catch(console.error);
